@@ -2,9 +2,9 @@
 require_once ('bdd.php');
 
 //fonction : Liste de toutes les lunettes
-function get_list_lunettes($bdd){
+function get_list_lunettes($bdd,$id){
     //la requete
-    $sqlListLunettes = " SELECT * FROM lunettes ";
+    $sqlListLunettes = " SELECT * FROM lunettes WHERE id_modele_lunette= ".$id."";
     $reqListLunettes = $bdd->query($sqlListLunettes);
     // création d'un tableau qui va contenir la liste des lunettes
     $ListLunettes = array();
@@ -25,7 +25,21 @@ function get_list_modeles_lunettes($bdd){
     //On éxécute la réquête
     while($resListLunettesFinal = $reqListModeleLunettes->fetch(PDO::FETCH_OBJ)){
          //on ajoute toutes les lunettes dans notre tableau
-        array_push($ListModeleLunettes, array("modele_lunettes" => $resListLunettesFinal->nom_modele_lunettes)); 
+        array_push($ListModeleLunettes, array("id"=>$resListLunettesFinal->id_modele_lunettes, "modele_lunettes" => $resListLunettesFinal->nom_modele_lunettes)); 
+    }
+    return $ListModeleLunettes;
+}
+
+function get_list_modeles_clip($bdd,$id){
+    //la requete
+    $sqlListModeleClip = " SELECT * FROM `modele_clips` WHERE `id_modele_lunettes`=".$id." ";
+    $reqListModeleClip = $bdd->query($sqlListModeleClip);
+    // création d'un tableau qui va contenir la liste des lunettes
+    $ListModeleClip = array();
+    //On éxécute la réquête
+    while($resListClipFinal = $reqListModeleClip->fetch(PDO::FETCH_OBJ)){
+         //on ajoute toutes les lunettes dans notre tableau
+        array_push($ListModeleLunettes, array("id"=>$resListClipFinal->id_modele_clip, "ref_clip" => $resListClipFinal->ref_modele_clip)); 
     }
     return $ListModeleLunettes;
 }
@@ -41,7 +55,7 @@ if(isset($_GET['action']) && in_array($_GET['action'], $possibles_url)){
         // si on a ?action=get_list_lunettes alors 
         case "get_list_lunettes": 
             // $value est égale au résultat de la fonction
-            $value = get_list_lunettes($bdd); 
+            if(isset($_GET['id']))  $value = get_list_lunettes($bdd,$_GET['id']);
             break;
         case "get_list_modeles_lunettes": 
             // $value est égale au résultat de la fonction
