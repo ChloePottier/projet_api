@@ -14,12 +14,12 @@
         <div class="container">
         <?php
                     //si $_GET['action'] existe
-                if(isset($_GET['action']) && $_GET["action"] == "get_list_lunettes"){
+                if(isset($_GET['action']) && $_GET["action"] == "get_list_lunettes"  ){
                     //on récupère le contenu du lien
                     $ListLunettes = file_get_contents("http://localhost/api_zenka/api.php?action=get_list_lunettes&id=".$_GET['id']."");
                     // on décode le fichier json
                     $ListLunettes = json_decode($ListLunettes, true); 
-                    $ListModeleClip = file_get_contents("http://localhost/api_zenka/api.php?action=get_list_lunettes&id=".$_GET['id']."");
+                    $ListModeleClip = file_get_contents("http://localhost/api_zenka/api.php?action=get_list_modeles_clips&id=".$_GET['id']."");
                     $ListModeleClip = json_decode($ListModeleClip, true);
                     echo "<h2>Listing de toutes les montures du modèle</h2>";
                     echo"<div class='col-6'>";
@@ -28,12 +28,12 @@
                         echo "<div class='row'><div class='ref_lunettes'>".$lunettes2['ref_lunettes']."</div><div  class='col_lunettes'>".$lunettes2['col_lunettes']."</div></div>";
                         endforeach;
                     echo"</div>";
-                    // echo "<div col-6>"
-                    //     echo "<div class='row bold'><div class='ref_lunettes'>Référence</div> <div class='col_lunettes'>Coloris</div></div>";
-                    //     foreach($ListModeleClip as $clip):
-                    //     echo "<div class='row'><div class='ref_lunettes'>".$clip['ref_lunettes']."</div><div  class='col_lunettes'>".$clip['col_lunettes']."</div></div>";
-                    //     endforeach;
-                    // echo "</div>";
+                    echo "<div col-6>";
+                        echo "<div class='row bold'><div class='ref_clip'>Clips pour ce modèle</div> </div>";
+                        foreach($ListModeleClip as $clip):
+                        echo "<div class='row'><div class='ref_clip'>".$clip['ref_clip']."</div></div>";
+                        endforeach;
+                    echo "</div>";
                     
                 } else { // sinon : si $_GET['action'] n'existe pas (donc client.php)
                     $ListModeleLunettes = file_get_contents("http://localhost/api_zenka/api.php?action=get_list_modeles_lunettes");

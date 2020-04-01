@@ -13,6 +13,7 @@ function get_list_lunettes($bdd,$id){
          //on ajoute toutes les lunettes dans notre tableau
         array_push($ListLunettes, array("ref_lunettes" => $resListLunettesFinal->ref_lunettes, "col_lunettes" => $resListLunettesFinal->col_lunettes)); 
     }
+    
     return $ListLunettes;
 }
 
@@ -30,7 +31,7 @@ function get_list_modeles_lunettes($bdd){
     return $ListModeleLunettes;
 }
 
-function get_list_modeles_clip($bdd,$id){
+function get_list_modeles_clips($bdd,$id){
     //la requete
     $sqlListModeleClip = " SELECT * FROM `modele_clips` WHERE `id_modele_lunettes`=".$id." ";
     $reqListModeleClip = $bdd->query($sqlListModeleClip);
@@ -39,13 +40,13 @@ function get_list_modeles_clip($bdd,$id){
     //On éxécute la réquête
     while($resListClipFinal = $reqListModeleClip->fetch(PDO::FETCH_OBJ)){
          //on ajoute toutes les lunettes dans notre tableau
-        array_push($ListModeleLunettes, array("id"=>$resListClipFinal->id_modele_clip, "ref_clip" => $resListClipFinal->ref_modele_clip)); 
+        array_push($ListModeleClip, array("ref_clip" => $resListClipFinal->ref_modele_clip)); 
     }
-    return $ListModeleLunettes;
+    return $ListModeleClip;
 }
 
 // je définis les url possibles et je les mets dans un tableau
-$possibles_url = array('get_list_lunettes', 'get_list_modeles_lunettes');
+$possibles_url = array('get_list_lunettes', 'get_list_modeles_lunettes', 'get_list_modeles_clips');
 // on déclare une var $value qui va d'abord prendre en valeur un msg d'erreur 
 $value = "Une erreur est survenue";
 // si ?action = existe et dans le tableau $possibles_url aussi alors :
@@ -60,6 +61,12 @@ if(isset($_GET['action']) && in_array($_GET['action'], $possibles_url)){
         case "get_list_modeles_lunettes": 
             // $value est égale au résultat de la fonction
             $value = get_list_modeles_lunettes($bdd); 
+            break;
+        case "get_list_modeles_clips": 
+            // $value est égale au résultat de la fonction
+            if(isset($_GET['id']))  $value = get_list_modeles_clips($bdd,$_GET['id']);
+
+            // $value = get_list_modeles_clips($bdd,$id); 
             break;
     }
 }
